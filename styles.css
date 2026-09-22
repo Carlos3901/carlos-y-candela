@@ -24,6 +24,12 @@ body::before {
     radial-gradient(700px 420px at 110% 10%, rgba(212, 176, 122, 0.12), transparent 50%),
     radial-gradient(600px 500px at 50% 120%, rgba(196, 92, 106, 0.1), transparent 55%);
 }
+body.fiesta::before {
+  background:
+    radial-gradient(900px 520px at 20% -10%, rgba(196, 92, 106, 0.38), transparent 55%),
+    radial-gradient(700px 420px at 110% 10%, rgba(212, 176, 122, 0.28), transparent 50%),
+    radial-gradient(600px 500px at 50% 120%, rgba(196, 92, 106, 0.18), transparent 55%);
+}
 .grain {
   position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .07;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -37,6 +43,9 @@ h1 {
   line-height: 1.05;
   margin: 8px 0 4px;
 }
+body.fiesta h1 {
+  text-shadow: 0 0 28px rgba(212, 176, 122, 0.45);
+}
 .subtitle {
   font-family: "Cormorant Garamond", serif;
   font-size: clamp(16px, 4.4vw, 22px);
@@ -45,6 +54,20 @@ h1 {
   color: var(--gold);
   letter-spacing: 0.04em;
   margin: 0 0 8px;
+}
+.fiesta-msg {
+  display: none;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(18px, 5vw, 24px);
+  color: #f3e6db;
+  margin: 16px 12px 0;
+  line-height: 1.4;
+}
+body.fiesta .fiesta-msg { display: block; }
+body.fiesta .chip {
+  border-color: var(--gold);
+  background: rgba(212, 176, 122, 0.28);
 }
 .counter { margin: 28px 0 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .unit {
