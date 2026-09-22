@@ -17,10 +17,24 @@ for (let i=1;i<=54;i++){
 }
 
 const $ = (id) => document.getElementById(id);
-const START = new Date("2024-10-26T00:00:00");
+const START = new Date("2024-10-26T00:00:00-03:00");
 const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
 const FIESTA_TXT = "Hoy ya son dos años con la persona más linda del mundo, te mereces todo y un poco más";
+const FIESTA_DAY = "2026-10-26";
+
+function fechaAR(d) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Argentina/Buenos_Aires",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(d);
+}
+
+function esDiaFiesta(d) {
+  return previewFiesta || fechaAR(d) === FIESTA_DAY;
+}
 
 function diffParts(from, to) {
   let seconds = Math.max(0, Math.floor((to - from) / 1000));
@@ -51,7 +65,10 @@ function setFiesta(on) {
   fiestaOn = on;
   document.body.classList.toggle("fiesta", on);
   const msg = $("fiestaMsg");
-  if (msg && on) msg.textContent = FIESTA_TXT;
+  if (msg) {
+    if (on) msg.textContent = FIESTA_TXT;
+    else msg.textContent = "";
+  }
 }
 
 function renderCounter() {
@@ -64,7 +81,7 @@ function renderCounter() {
   const next = nextAnniversary(START, now);
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const left = Math.round((next - today) / 86400000);
-  const isDay = previewFiesta || left === 0;
+  const isDay = esDiaFiesta(now);
   $("chip").textContent = isDay
     ? `Hoy es el aniversario · ${Math.max(p.years, previewFiesta ? 2 : 0)} año${p.years === 1 && !previewFiesta ? "" : "s"} juntos`
     : `Faltan ${left} día${left === 1 ? "" : "s"} para el próximo aniversario`;
@@ -170,4 +187,4 @@ document.querySelectorAll(".reveal").forEach((el, i) => {
 renderCounter();
 spawnHearts();
 setInterval(renderCounter, 1000);
-setInterval(spawnHearts, fiestaOn ? 4500 : 9000);
+setInterval(spawnHearts, 9000);
