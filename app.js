@@ -46,6 +46,14 @@ function fechaAR(d) {
   }).format(d);
 }
 
+function fechaHumana(d) {
+  return new Intl.DateTimeFormat("es-AR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  }).format(d);
+}
+
 function esDiaFiesta(d) {
   return previewFiesta || fechaAR(d) === FIESTA_DAY;
 }
@@ -96,9 +104,10 @@ function renderCounter() {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const left = Math.round((next - today) / 86400000);
   const isDay = esDiaFiesta(now);
+  const humano = fechaHumana(isDay ? now : next);
   $("chip").textContent = isDay
-    ? `Hoy es el aniversario · ${Math.max(p.years, previewFiesta ? 2 : 0)} año${p.years === 1 && !previewFiesta ? "" : "s"} juntos`
-    : `Faltan ${left} día${left === 1 ? "" : "s"} para el próximo aniversario`;
+    ? `Hoy es el aniversario · ${humano}`
+    : `Faltan ${left} día${left === 1 ? "" : "s"} · ${humano}`;
   const totalDays = Math.floor((now - START) / 86400000);
   $("sub").innerHTML = `<span><strong>${totalDays}</strong> días juntitos</span>`;
   $("counter").innerHTML = units.map(([label, n]) =>
