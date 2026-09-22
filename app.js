@@ -18,6 +18,8 @@ for (let i=1;i<=54;i++){
 
 const $ = (id) => document.getElementById(id);
 const START = new Date("2024-10-26T00:00:00");
+const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
+let fiestaOn = false;
 
 function diffParts(from, to) {
   let seconds = Math.max(0, Math.floor((to - from) / 1000));
@@ -44,6 +46,19 @@ function nextAnniversary(from, now) {
   return next;
 }
 
+function setFiesta(on, years) {
+  fiestaOn = on;
+  document.body.classList.toggle("fiesta", on);
+  const msg = $("fiestaMsg");
+  if (msg) {
+    if (on && years) {
+      msg.textContent = years === 2
+        ? "Hoy son dos años. Te elijo otra vez, y todas las que falten."
+        : "Hoy es nuestro día. Te elijo otra vez, y todas las que falten.";
+    }
+  }
+}
+
 function renderCounter() {
   const now = new Date();
   const p = diffParts(START, now);
@@ -54,26 +69,29 @@ function renderCounter() {
   const next = nextAnniversary(START, now);
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const left = Math.round((next - today) / 86400000);
-  $("chip").textContent = left === 0
-    ? `Hoy es el aniversario · ${p.years} año${p.years === 1 ? "" : "s"} juntos`
+  const isDay = previewFiesta || left === 0;
+  $("chip").textContent = isDay
+    ? `Hoy es el aniversario · ${Math.max(p.years, previewFiesta ? 2 : 0)} año${p.years === 1 && !previewFiesta ? "" : "s"} juntos`
     : `Faltan ${left} día${left === 1 ? "" : "s"} para el próximo aniversario`;
   const totalDays = Math.floor((now - START) / 86400000);
   $("sub").innerHTML = `<span><strong>${totalDays}</strong> días juntitos</span>`;
   $("counter").innerHTML = units.map(([label, n]) =>
     `<div class="unit"><b>${n}</b><span>${label}</span></div>`
   ).join("");
+  setFiesta(isDay, previewFiesta ? 2 : p.years);
 }
 
 function spawnHearts() {
   const root = $("hearts");
-  for (let i = 0; i < 10; i++) {
+  const n = fiestaOn ? 22 : 10;
+  for (let i = 0; i < n; i++) {
     const h = document.createElement("div");
     h.className = "heart";
     h.textContent = i % 3 === 0 ? "♥" : "♡";
     h.style.left = Math.random() * 100 + "%";
-    h.style.fontSize = 12 + Math.random() * 16 + "px";
-    h.style.animationDuration = 7 + Math.random() * 6 + "s";
-    h.style.animationDelay = Math.random() * 4 + "s";
+    h.style.fontSize = (fiestaOn ? 14 : 12) + Math.random() * (fiestaOn ? 22 : 16) + "px";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+    h.style.animationDelay = Math.random() * 3 + "s";
     root.appendChild(h);
     setTimeout(() => h.remove(), 14000);
   }
@@ -157,4 +175,4 @@ document.querySelectorAll(".reveal").forEach((el, i) => {
 renderCounter();
 spawnHearts();
 setInterval(renderCounter, 1000);
-setInterval(spawnHearts, 9000);
+setInterval(spawnHearts, fiestaOn ? 4500 : 9000);
