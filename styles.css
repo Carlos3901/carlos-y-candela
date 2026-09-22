@@ -157,8 +157,17 @@ button { font-family: Outfit, sans-serif; border: 0; cursor: pointer; background
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .9s ease, transform .9s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 .momento { margin-top: 8px; }
+.rail-hint {
+  position: relative; z-index: 3;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 8px 16px 0;
+}
 .rail {
-  position: relative; z-index: 3; overflow: hidden; margin: 28px 0 40px;
+  position: relative; z-index: 3; overflow: hidden; margin: 8px 0 40px;
   padding: 12px 0 28px; cursor: grab; touch-action: pan-x;
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
