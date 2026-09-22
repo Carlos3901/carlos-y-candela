@@ -20,6 +20,7 @@ const $ = (id) => document.getElementById(id);
 const START = new Date("2024-10-26T00:00:00");
 const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
+const FIESTA_TXT = "Hoy ya son dos años con la persona más linda del mundo, te mereces todo y un poco más";
 
 function diffParts(from, to) {
   let seconds = Math.max(0, Math.floor((to - from) / 1000));
@@ -46,17 +47,11 @@ function nextAnniversary(from, now) {
   return next;
 }
 
-function setFiesta(on, years) {
+function setFiesta(on) {
   fiestaOn = on;
   document.body.classList.toggle("fiesta", on);
   const msg = $("fiestaMsg");
-  if (msg) {
-    if (on && years) {
-      msg.textContent = years === 2
-        ? "Hoy son dos años. Te elijo otra vez, y todas las que falten."
-        : "Hoy es nuestro día. Te elijo otra vez, y todas las que falten.";
-    }
-  }
+  if (msg && on) msg.textContent = FIESTA_TXT;
 }
 
 function renderCounter() {
@@ -78,7 +73,7 @@ function renderCounter() {
   $("counter").innerHTML = units.map(([label, n]) =>
     `<div class="unit"><b>${n}</b><span>${label}</span></div>`
   ).join("");
-  setFiesta(isDay, previewFiesta ? 2 : p.years);
+  setFiesta(isDay);
 }
 
 function spawnHearts() {
