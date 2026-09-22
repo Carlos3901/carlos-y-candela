@@ -170,7 +170,7 @@ new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting && !railArmed) {
       railArmed = true;
-      setTimeout(() => { railLive = true; }, 1500);
+      setTimeout(() => { railLive = true; }, 3000);
     }
   });
 }, { threshold: 0.2 }).observe(rail);
