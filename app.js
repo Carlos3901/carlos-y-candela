@@ -1,4 +1,4 @@
-const BASE = "https://nova-ridge-5bqd1.shipped.run/";
+const BASE = "";
 const F = [BASE+"primera.jpg", BASE+"primera-cita.jpg", BASE+"primera-novios.jpg"];
 document.querySelectorAll(".featured").forEach((el,i)=>{
   el.dataset.full = F[i];
