@@ -146,6 +146,12 @@ function apply() {
   while (x > 0) x -= half;
   track.style.transform = "translate3d(" + x + "px,0,0)";
 }
+function centerRail() {
+  const half = track.scrollWidth / 2;
+  if (half < 10) return;
+  x = -(half / 2) + rail.clientWidth / 2;
+  apply();
+}
 function tick() {
   const lbOpen = document.getElementById("lightbox").classList.contains("open");
   if (railLive && !hold && !lbOpen) {
@@ -157,6 +163,8 @@ function tick() {
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
+centerRail();
+window.addEventListener("load", centerRail);
 new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) railLive = true;
