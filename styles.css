@@ -35,15 +35,17 @@ h1 {
   font-weight: 500;
   font-size: clamp(36px, 10vw, 58px);
   line-height: 1.05;
-  margin: 8px 0 6px;
+  margin: 8px 0 4px;
 }
 .subtitle {
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(28px, 8vw, 42px);
-  font-weight: 500;
-  color: var(--muted);
+  font-size: clamp(16px, 4.4vw, 22px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
 }
-.subtitle em { font-style: italic; color: var(--gold); }
 .counter { margin: 28px 0 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .unit {
   background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
