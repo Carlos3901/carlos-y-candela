@@ -137,6 +137,7 @@ const rail = $("rail");
 const track = rail.querySelector(".rail-track");
 [...track.children].forEach((el) => track.appendChild(el.cloneNode(true)));
 let hold = false, dragging = false, x = 0, startX = 0, startPos = 0, lastX = 0, lastT = 0, vx = 0, moved = 0;
+let railLive = false;
 const cruise = 0.85, friction = 0.92;
 function apply() {
   const half = track.scrollWidth / 2;
@@ -147,7 +148,7 @@ function apply() {
 }
 function tick() {
   const lbOpen = document.getElementById("lightbox").classList.contains("open");
-  if (!hold && !lbOpen) {
+  if (railLive && !hold && !lbOpen) {
     x += vx - cruise;
     vx *= friction;
     if (Math.abs(vx) < 0.15) vx = 0;
@@ -156,6 +157,11 @@ function tick() {
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
+new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) railLive = true;
+  });
+}, { threshold: 0.2 }).observe(rail);
 rail.addEventListener("pointerdown", (e) => {
   hold = true; dragging = true; moved = 0; vx = 0;
   startX = lastX = e.clientX; startPos = x; lastT = performance.now();
