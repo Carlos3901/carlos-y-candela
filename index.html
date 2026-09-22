@@ -1,53 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Carlos y Candela</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400&family=Outfit:wght@400&display=swap" rel="stylesheet"/>
-<style>
-body{margin:0;font-family:Outfit,sans-serif;background:#14080c;color:#f6eee6;text-align:center;padding:28px 16px 64px}
-h1,h2,.note,.msg{font-family:"Cormorant Garamond",serif}
-h1{font-size:42px;font-weight:500;margin:12px 0 4px}
-.sub{color:#c9b3a8;font-size:28px;font-family:"Cormorant Garamond",serif}
-.sub em{color:#d4b07a;font-style:italic}
-.msg,.note{font-style:italic;line-height:1.45;margin:18px 8px}
-img.card{width:min(360px,92vw);border:10px solid #f7efe6;border-bottom-width:36px;box-shadow:0 20px 40px #0006;margin:8px 0 6px}
-#c{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:420px;margin:20px auto}
-.u{border:1px solid rgba(246,238,230,.12);border-radius:16px;padding:12px 4px}
-.u b{display:block;font-family:"Cormorant Garamond",serif;font-size:28px}
-.u s{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#c9b3a8;text-decoration:none}
-a{color:#d4b07a}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a0a0e" />
+  <title>Carlos y Candela · 2 años</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<h1>Carlos & Candela</h1>
-<p class="sub">Dos <em>años</em></p>
-<p class="msg">Parece poco pero ya pasaron dos años, y no quería que solo fuese un día más... yyyyyy te amoooo muchsiisisisiimo</p>
-<div id="c"></div>
-<p id="d"></p>
-<h2>Nuestra primera foto</h2>
-<img class="card" src="https://nova-ridge-5bqd1.shipped.run/primera.jpg" alt=""/>
-<p class="note">Nuestra primera, jamás me hubiese imaginado todo lo que iba a pasar después, “vos la más linda” dijo un romántico por ig</p>
-<h2>Nuestra primera cita</h2>
-<img class="card" src="https://nova-ridge-5bqd1.shipped.run/primera-cita.jpg" alt=""/>
-<p class="note">Está foto la saqué a escondidas, porque? no hay un porque, tal vez intuía algo o vetu</p>
-<h2>Nuestra primera foto de novios</h2>
-<img class="card" src="https://nova-ridge-5bqd1.shipped.run/primera-novios.jpg" alt=""/>
-<p class="note">Esta es la primera foto que tengo yo al menos, en la que estamos los dos juntos después del 26/10</p>
-<p class="msg">Por siempre y para siempre mor</p>
-<p><a href="https://nova-ridge-5bqd1.shipped.run/">Ver la versión completa con la tira Polaroid</a></p>
-<script>
-const START=new Date("2024-10-26T00:00:00");
-function tick(){
- const now=new Date();
- let y=now.getFullYear()-START.getFullYear(),m=now.getMonth()-START.getMonth(),d=now.getDate()-START.getDate();
- if(d<0){m--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate()}
- if(m<0){y--;m+=12}
- const days=Math.floor((now-START)/86400000);
- document.getElementById("c").innerHTML=[["años",y],["meses",m],["días",d]].map(([l,n])=>`<div class="u"><b>${n}</b><s>${l}</s></div>`).join("");
- document.getElementById("d").innerHTML=`<strong>${days}</strong> días juntitos`;
-}
-tick(); setInterval(tick,1000);
-</script>
-</body></html>
+  <div class="grain"></div>
+  <div class="hearts" id="hearts"></div>
+  <div class="wrap">
+    <header class="hero reveal">
+      <h1>Carlos & Candela</h1>
+      <p class="subtitle">Dos <em>años</em></p>
+      <div class="chip" id="chip">Desde el 26 de octubre de 2024</div>
+    </header>
+    <div class="reveal">
+      <p class="message">Parece poco pero ya pasaron dos años, y no quería que solo fuese un día más, una simple foto o un texto, por eso hice esto, para poder ver todos los días un eso yyyyyy te amoooo muchsiisisisiimo</p>
+      <section class="counter" id="counter"></section>
+      <p class="subcounter" id="sub"></p>
+    </div>
+    <div class="momento reveal">
+      <p class="first-photo">Nuestra primera foto</p>
+      <figure class="featured" data-full=""><img alt="Nuestra primera foto" /></figure>
+      <p class="photo-note">Nuestra primera, jamás me hubiese imaginado todo lo que iba a pasar después, “vos la más linda” dijo un romántico por ig</p>
+    </div>
+    <div class="momento reveal">
+      <p class="first-photo">Nuestra primera cita</p>
+      <figure class="featured alt" data-full=""><img alt="Nuestra primera cita" /></figure>
+      <p class="photo-note">Está foto la saqué a escondidas, porque? no hay un porque, tal vez intuía algo o vetu</p>
+    </div>
+    <div class="momento reveal">
+      <p class="first-photo">Nuestra primera foto de novios</p>
+      <figure class="featured" data-full=""><img alt="Nuestra primera foto de novios" /></figure>
+      <p class="photo-note">Esta es la primera foto que tengo yo al menos, en la que estamos los dos juntos después del 26/10, el día de tu cumpleaños</p>
+    </div>
+    <div class="separador reveal">
+      <p class="iniciales">C <span class="heart">♡</span> C</p>
+    </div>
+    <p class="cierre reveal">Jamás me voy a olvidar cuando me abrazaste por la espalda aquella tarde en mi casa y te canté por primera vez un tema tan lleno de todo, después entendí que vos eras esa chica especial por cual jugármela y darlo todo, porque sin saberlo me llenaste el alma, ojalá que esta locura hermosa siga por muchos años más y ojalá para toda la vida, quiero una vida con vos…<span class="firma">Por siempre y para siempre mor</span></p>
+  </div>
+  <div class="rail reveal" id="rail" aria-label="Recuerdos"><div class="rail-track" id="railTrack"></div></div>
+  <p class="cierre-fotos reveal">Quichicinetas fotos y mil quichicientos recuerdos…</p>
+  <div class="lightbox" id="lightbox">
+    <button class="close" id="btnCloseLb">✕</button>
+    <img id="lbImg" alt="Recuerdo" />
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
