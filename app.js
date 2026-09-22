@@ -16,6 +16,17 @@ for (let i=1;i<=54;i++){
   track0.appendChild(fig);
 }
 
+const bgVideo = document.getElementById("bgVideo");
+if (bgVideo) {
+  bgVideo.muted = true;
+  bgVideo.playsInline = true;
+  const kick = () => bgVideo.play().catch(() => {});
+  kick();
+  bgVideo.addEventListener("canplay", kick);
+  document.addEventListener("touchstart", kick, { once: true });
+  document.addEventListener("click", kick, { once: true });
+}
+
 const $ = (id) => document.getElementById(id);
 const START = new Date("2024-10-26T00:00:00-03:00");
 const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
