@@ -103,8 +103,8 @@ body.fiesta .chip {
   font-style: italic;
   font-size: 22px;
   text-align: center;
-  color: #f7efe6;
-  text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 18px rgba(212,176,122,.35);
+  color: #e8c48a;
+  text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 18px rgba(212,176,122,.4);
 }
 .cierre-fotos { margin: 8px 16px 48px; }
 .cierre .firma { display: block; margin-top: 18px; }
