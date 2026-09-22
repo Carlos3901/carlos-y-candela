@@ -2,7 +2,10 @@ const BASE = "";
 const F = [BASE+"primera.jpg", BASE+"primera-cita.jpg", BASE+"primera-novios.jpg"];
 document.querySelectorAll(".featured").forEach((el,i)=>{
   el.dataset.full = F[i];
-  el.querySelector("img").src = F[i];
+  const img = el.querySelector("img");
+  img.src = F[i];
+  img.decoding = "async";
+  img.loading = i === 0 ? "eager" : "lazy";
 });
 const track0 = document.getElementById("railTrack");
 const tilts = [-2,1.8,-1.2,1.4,-1.8,1.1,-0.8,2,-1.5,1.3];
@@ -12,7 +15,7 @@ for (let i=1;i<=54;i++){
   fig.className = "polaroid";
   fig.dataset.full = src;
   fig.style.setProperty("--tilt", tilts[(i-1)%tilts.length]+"deg");
-  fig.innerHTML = '<img src="'+src+'" alt="" />';
+  fig.innerHTML = '<img src="'+src+'" alt="" loading="lazy" decoding="async" width="168" height="190" />';
   track0.appendChild(fig);
 }
 
