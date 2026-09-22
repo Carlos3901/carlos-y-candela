@@ -43,9 +43,7 @@ h1 {
   line-height: 1.05;
   margin: 8px 0 4px;
 }
-body.fiesta h1 {
-  text-shadow: 0 0 28px rgba(212, 176, 122, 0.45);
-}
+body.fiesta h1 { text-shadow: 0 0 28px rgba(212, 176, 122, 0.45); }
 .subtitle {
   font-family: "Cormorant Garamond", serif;
   font-size: clamp(16px, 4.4vw, 22px);
@@ -57,12 +55,17 @@ body.fiesta h1 {
 }
 .fiesta-msg {
   display: none;
-  font-family: "Cormorant Garamond", serif;
-  font-style: italic;
-  font-size: clamp(18px, 5vw, 24px);
-  color: #f3e6db;
-  margin: 16px 12px 0;
-  line-height: 1.4;
+  font-family: "Great Vibes", cursive;
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(26px, 7.2vw, 36px);
+  line-height: 1.35;
+  color: #f4e1c4;
+  text-shadow: 0 0 18px rgba(212, 176, 122, 0.35);
+  margin: 22px 10px 4px;
+  padding: 14px 8px 10px;
+  border-top: 1px solid rgba(212, 176, 122, 0.28);
+  border-bottom: 1px solid rgba(212, 176, 122, 0.28);
 }
 body.fiesta .fiesta-msg { display: block; }
 body.fiesta .chip {
