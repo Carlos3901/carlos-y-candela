@@ -137,6 +137,7 @@ $("lightbox").addEventListener("click", (e) => {
 });
 
 const rail = $("rail");
+const railHint = $("railHint");
 const track = rail.querySelector(".rail-track");
 [...track.children].forEach((el) => track.appendChild(el.cloneNode(true)));
 let hold = false, dragging = false, x = 0, startX = 0, startPos = 0, lastX = 0, lastT = 0, vx = 0, moved = 0;
@@ -182,6 +183,7 @@ rail.addEventListener("pointerdown", (e) => {
   startX = lastX = e.clientX; startPos = x; lastT = performance.now();
   rail.classList.add("grabbing");
   rail.setPointerCapture(e.pointerId);
+  if (railHint) railHint.textContent = "Soltá para seguir";
 });
 rail.addEventListener("pointermove", (e) => {
   if (!dragging) return;
@@ -200,6 +202,7 @@ function endDrag() {
   dragging = false; hold = false;
   rail.classList.remove("grabbing");
   if (performance.now() - lastT > 80) vx = 0;
+  if (railHint) railHint.textContent = "Mantené para mirar";
 }
 rail.addEventListener("pointerup", endDrag);
 rail.addEventListener("pointercancel", endDrag);
