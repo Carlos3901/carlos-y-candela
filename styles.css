@@ -96,8 +96,15 @@ body.fiesta .chip {
   text-align: center; line-height: 1.5; color: #f3e6db; margin: 48px 8px 12px;
 }
 .cierre-fotos {
-  font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 20px;
-  text-align: center; color: var(--gold); margin: 8px 20px 48px;
+  position: relative;
+  z-index: 3;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 22px;
+  text-align: center;
+  color: #f7efe6;
+  text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 18px rgba(212,176,122,.35);
+  margin: 8px 16px 48px;
 }
 .cierre .firma { display: block; margin-top: 18px; color: var(--gold); font-size: 22px; }
 .separador { margin: 42px 12px 8px; text-align: center; }
