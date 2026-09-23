@@ -167,7 +167,7 @@ button { font-family: Outfit, sans-serif; border: 0; cursor: pointer; background
   margin: 8px 16px 0;
 }
 .rail {
-  position: relative; z-index: 3; overflow: hidden; margin: 8px 0 8px;
+  position: relative; z-index: 3; overflow: hidden; margin: 8px 0 40px;
   padding: 12px 0 28px; cursor: grab; touch-action: pan-x;
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
@@ -175,41 +175,10 @@ button { font-family: Outfit, sans-serif; border: 0; cursor: pointer; background
 .rail-track { display: flex; width: max-content; gap: 16px; will-change: transform; }
 .rail .polaroid { flex: 0 0 168px; margin: 0; padding: 8px 8px 26px; }
 .rail .polaroid img { height: 190px; object-fit: cover; pointer-events: none; }
-.rail .polaroid.blank {
-  flex-basis: 168px;
-  height: 224px;
-  cursor: default;
-  background: #f4eadf;
-  margin-left: 36px;
-}
-.blank-fill {
-  display: block;
-  width: 100%;
-  height: 190px;
-  background: #efe4d6;
-}
-.rail-gap { flex: 0 0 130px; height: 1px; }
-.continua-msg {
-  position: relative;
-  z-index: 3;
-  text-align: center;
-  font-family: "Great Vibes", cursive;
-  font-size: 34px;
-  color: #e8c48a;
-  text-shadow: 0 2px 12px rgba(0,0,0,.75);
-  min-height: 44px;
-  margin: 4px 16px 28px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .55s ease;
-}
-.continua-msg.on { opacity: 1; }
 @media (min-width: 640px) {
   .counter { grid-template-columns: repeat(6, 1fr); }
   .rail .polaroid { flex-basis: 200px; }
   .rail .polaroid img { height: 230px; }
-  .rail .polaroid.blank { height: 264px; flex-basis: 200px; }
-  .blank-fill { height: 230px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
