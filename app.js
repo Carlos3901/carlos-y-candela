@@ -22,6 +22,9 @@ const blank0 = document.createElement("figure");
 blank0.className = "polaroid blank";
 blank0.style.setProperty("--tilt", "0.4deg");
 track0.appendChild(blank0);
+const gap0 = document.createElement("div");
+gap0.className = "rail-gap";
+track0.appendChild(gap0);
 
 const bgVideo = document.getElementById("bgVideo");
 if (bgVideo) {
