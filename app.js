@@ -18,14 +18,6 @@ for (let i=1;i<=54;i++){
   fig.innerHTML = '<img src="'+src+'" alt="" loading="lazy" decoding="async" width="168" height="190" />';
   track0.appendChild(fig);
 }
-const blank0 = document.createElement("figure");
-blank0.className = "polaroid blank";
-blank0.style.setProperty("--tilt", "0.4deg");
-blank0.innerHTML = '<span class="blank-fill"></span>';
-track0.appendChild(blank0);
-const gap0 = document.createElement("div");
-gap0.className = "rail-gap";
-track0.appendChild(gap0);
 
 const bgVideo = document.getElementById("bgVideo");
 if (bgVideo) {
@@ -155,37 +147,23 @@ $("lightbox").addEventListener("click", (e) => {
 
 const rail = $("rail");
 const railHint = $("railHint");
-const continuaMsg = $("continuaMsg");
-if (continuaMsg) continuaMsg.textContent = "Continuara…";
 const track = rail.querySelector(".rail-track");
 [...track.children].forEach((el) => track.appendChild(el.cloneNode(true)));
 let hold = false, dragging = false, x = 0, startX = 0, startPos = 0, lastX = 0, lastT = 0, vx = 0, moved = 0;
 let railLive = false;
 let railArmed = false;
 const cruise = 0.85, friction = 0.92;
-function checkBlank() {
-  if (!continuaMsg) return;
-  const box = rail.getBoundingClientRect();
-  const cx = box.left + box.width / 2;
-  let show = false;
-  track.querySelectorAll(".polaroid.blank").forEach((el) => {
-    const r = el.getBoundingClientRect();
-    if (r.left < cx && r.right > cx) show = true;
-  });
-  continuaMsg.classList.toggle("on", show);
-}
 function apply() {
   const half = track.scrollWidth / 2;
   if (half < 10) return;
   while (x <= -half) x += half;
   while (x > 0) x -= half;
   track.style.transform = "translate3d(" + x + "px,0,0)";
-  checkBlank();
 }
 function centerRail() {
   const half = track.scrollWidth / 2;
   if (half < 10) return;
-  x = -(half * 0.55) + rail.clientWidth / 2;
+  x = -(half * 0.5) + rail.clientWidth / 2;
   apply();
 }
 function tick() {
@@ -195,8 +173,6 @@ function tick() {
     vx *= friction;
     if (Math.abs(vx) < 0.15) vx = 0;
     apply();
-  } else if (!railLive) {
-    checkBlank();
   }
   requestAnimationFrame(tick);
 }
