@@ -179,7 +179,9 @@ button { font-family: Outfit, sans-serif; border: 0; cursor: pointer; background
   height: 224px;
   cursor: default;
   background: #f4eadf;
+  margin-left: 36px;
 }
+.rail-gap { flex: 0 0 130px; height: 1px; }
 .continua-msg {
   position: relative;
   z-index: 3;
