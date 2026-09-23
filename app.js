@@ -185,7 +185,7 @@ function apply() {
 function centerRail() {
   const half = track.scrollWidth / 2;
   if (half < 10) return;
-  x = -(half - Math.min(520, rail.clientWidth + 200));
+  x = -(half * 0.55) + rail.clientWidth / 2;
   apply();
 }
 function tick() {
