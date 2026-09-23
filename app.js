@@ -21,6 +21,7 @@ for (let i=1;i<=54;i++){
 const blank0 = document.createElement("figure");
 blank0.className = "polaroid blank";
 blank0.style.setProperty("--tilt", "0.4deg");
+blank0.innerHTML = '<span class="blank-fill"></span>';
 track0.appendChild(blank0);
 const gap0 = document.createElement("div");
 gap0.className = "rail-gap";
@@ -184,7 +185,7 @@ function apply() {
 function centerRail() {
   const half = track.scrollWidth / 2;
   if (half < 10) return;
-  x = -(half / 2) + rail.clientWidth / 2;
+  x = -(half - Math.min(520, rail.clientWidth + 200));
   apply();
 }
 function tick() {
