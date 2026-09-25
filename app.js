@@ -41,6 +41,8 @@ const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
 const previewMensual = /(?:^|[?&])mensual(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
 let mensualOn = false;
+const INTRO_FIN = ", y no quería que solo fuese un día más, una simple foto o un texto, por eso hice esto, para poder entrar y ver todos los días un poco de nosotros yyyyyy te amoooo muchsiisisisiimo";
+const INTRO_CASI = "Parece poco pero ya pasaron casi dos años" + INTRO_FIN;
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -73,6 +75,15 @@ function aniosCumplidos(d) {
   let n = Number(ar.slice(0, 4)) - 2024;
   if (ar.slice(5) < "10-26") n -= 1;
   return Math.max(1, n);
+}
+
+function textoIntro(d) {
+  const ar = fechaAR(d);
+  if (!previewFiesta && ar < "2026-10-26") return INTRO_CASI;
+  let n = Number(ar.slice(0, 4)) - 2024;
+  if (!previewFiesta && ar.slice(5) < "10-26") n -= 1;
+  n = Math.max(2, n);
+  return "Parece poco pero ya pasaron " + n + " año" + (n === 1 ? "" : "s") + INTRO_FIN;
 }
 
 function textoFiesta(d) {
@@ -114,6 +125,8 @@ function setModos(anni, mes, d) {
   if (msg) msg.textContent = fiestaOn ? textoFiesta(d || new Date()) : "";
   const mmsg = $("mensualMsg");
   if (mmsg) mmsg.textContent = mensualOn ? "Otro messaversario juntitossss ♡" : "";
+  const intro = document.querySelector(".message");
+  if (intro) intro.textContent = textoIntro(d || new Date());
 }
 
 function renderCounter() {
