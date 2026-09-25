@@ -67,6 +67,21 @@ body.fiesta .chip {
   border-color: var(--gold);
   background: rgba(212, 176, 122, 0.28);
 }
+.mensual-msg {
+  display: none;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(18px, 4.8vw, 22px);
+  line-height: 1.4;
+  color: #e8c48a;
+  margin: 16px 12px 0;
+}
+body.mensual .mensual-msg { display: block; }
+body.mensual .chip {
+  border-color: rgba(196, 92, 106, 0.45);
+  background: rgba(196, 92, 106, 0.18);
+  color: #f0c4c8;
+}
 .counter { margin: 28px 0 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .unit {
   background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
