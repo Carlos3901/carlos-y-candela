@@ -264,8 +264,8 @@ function fadeMusic(play) {
       if (musicBtn) musicBtn.hidden = false;
       const step = () => {
         if (!musicOn) return;
-        endMusic.volume = Math.min(0.22, endMusic.volume + 0.012);
-        if (endMusic.volume < 0.22) requestAnimationFrame(step);
+        endMusic.volume = Math.min(0.15, endMusic.volume + 0.008);
+        if (endMusic.volume < 0.15) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
     }).catch(() => {});
