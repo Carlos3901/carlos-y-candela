@@ -249,6 +249,58 @@ document.querySelectorAll(".reveal").forEach((el, i) => {
   el.style.transitionDelay = Math.min(i * 0.08, 0.32) + "s";
   io.observe(el);
 });
+
+const endMusic = $("endMusic");
+const musicBtn = $("musicBtn");
+const cierreFotos = $("cierreFotos");
+let musicOn = false;
+let musicWanted = false;
+function fadeMusic(play) {
+  if (!endMusic) return;
+  if (play) {
+    endMusic.volume = 0;
+    endMusic.play().then(() => {
+      musicOn = true;
+      if (musicBtn) musicBtn.hidden = false;
+      const step = () => {
+        if (!musicOn) return;
+        endMusic.volume = Math.min(0.22, endMusic.volume + 0.012);
+        if (endMusic.volume < 0.22) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }).catch(() => {});
+  } else {
+    musicOn = false;
+    endMusic.pause();
+  }
+}
+function unlockMusic() {
+  if (!endMusic) return;
+  endMusic.volume = 0;
+  endMusic.play().then(() => {
+    if (!musicWanted) endMusic.pause();
+  }).catch(() => {});
+}
+document.addEventListener("touchstart", unlockMusic, { once: true });
+document.addEventListener("click", unlockMusic, { once: true });
+if (cierreFotos) {
+  new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        musicWanted = true;
+        fadeMusic(true);
+      }
+    });
+  }, { threshold: 0.35 }).observe(cierreFotos);
+}
+if (musicBtn) {
+  musicBtn.onclick = () => {
+    musicWanted = false;
+    fadeMusic(false);
+    musicBtn.hidden = true;
+  };
+}
+
 renderCounter();
 spawnHearts();
 setInterval(renderCounter, 1000);
