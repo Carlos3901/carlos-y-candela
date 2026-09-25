@@ -39,8 +39,6 @@ const $ = (id) => document.getElementById(id);
 const START = new Date("2024-10-26T00:00:00-03:00");
 const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
-const FIESTA_TXT = "Hoy ya son dos años con la persona más linda del mundo, te mereces todo y un poco más";
-const FIESTA_DAY = "2026-10-26";
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -60,7 +58,19 @@ function fechaHumana(d) {
 }
 
 function esDiaFiesta(d) {
-  return previewFiesta || fechaAR(d) === FIESTA_DAY;
+  return previewFiesta || fechaAR(d).slice(5) === "10-26";
+}
+
+function aniosCumplidos(d) {
+  const ar = fechaAR(d);
+  let n = Number(ar.slice(0, 4)) - 2024;
+  if (ar.slice(5) < "10-26") n -= 1;
+  return Math.max(1, n);
+}
+
+function textoFiesta(d) {
+  const n = aniosCumplidos(d);
+  return "Hoy ya son " + n + " año" + (n === 1 ? "" : "s") + " con la persona más linda del mundo, te mereces todo y un poco más";
 }
 
 function diffParts(from, to) {
@@ -88,14 +98,11 @@ function nextAnniversary(from, now) {
   return next;
 }
 
-function setFiesta(on) {
+function setFiesta(on, d) {
   fiestaOn = on;
   document.body.classList.toggle("fiesta", on);
   const msg = $("fiestaMsg");
-  if (msg) {
-    if (on) msg.textContent = FIESTA_TXT;
-    else msg.textContent = "";
-  }
+  if (msg) msg.textContent = on ? textoFiesta(d || new Date()) : "";
 }
 
 function renderCounter() {
@@ -118,7 +125,7 @@ function renderCounter() {
   $("counter").innerHTML = units.map(([label, n]) =>
     `<div class="unit"><b>${n}</b><span>${label}</span></div>`
   ).join("");
-  setFiesta(isDay);
+  setFiesta(isDay, now);
 }
 
 function spawnHearts() {
