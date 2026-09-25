@@ -208,6 +208,20 @@ button { font-family: Outfit, sans-serif; border: 0; cursor: pointer; background
   transition: opacity .55s ease;
 }
 .continua-msg.on { opacity: 1; }
+.music-btn {
+  position: fixed;
+  z-index: 8;
+  right: 14px;
+  bottom: 18px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(12,5,8,.62);
+  border: 1px solid var(--gold-soft);
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 @media (min-width: 640px) {
   .counter { grid-template-columns: repeat(6, 1fr); }
   .rail .polaroid { flex-basis: 200px; }
