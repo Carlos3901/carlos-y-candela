@@ -119,7 +119,7 @@ function renderCounter() {
   const humano = fechaHumana(isDay ? now : next);
   $("chip").textContent = isDay
     ? `Hoy es el aniversario · ${humano}`
-    : `Faltan ${left} día${left === 1 ? "" : "s"} · ${humano}`;
+    : `${left} día${left === 1 ? "" : "s"} para nuestro aniversario`;
   const totalDays = Math.floor((now - START) / 86400000);
   $("sub").innerHTML = `<span><strong>${totalDays}</strong> días juntitos</span>`;
   $("counter").innerHTML = units.map(([label, n]) =>
