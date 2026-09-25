@@ -212,9 +212,7 @@ function apply() {
   checkBlank();
 }
 function centerRail() {
-  const half = track.scrollWidth / 2;
-  if (half < 10) return;
-  x = -(half * 0.5) + rail.clientWidth / 2;
+  x = 0;
   apply();
 }
 function tick() {
