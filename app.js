@@ -113,7 +113,7 @@ function setModos(anni, mes, d) {
   const msg = $("fiestaMsg");
   if (msg) msg.textContent = fiestaOn ? textoFiesta(d || new Date()) : "";
   const mmsg = $("mensualMsg");
-  if (mmsg) mmsg.textContent = mensualOn ? "Otro 26. Un mes más juntitos." : "";
+  if (mmsg) mmsg.textContent = mensualOn ? "Otro messaversario juntitossss ♡" : "";
 }
 
 function renderCounter() {
