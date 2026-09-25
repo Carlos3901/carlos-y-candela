@@ -38,7 +38,9 @@ if (bgVideo) {
 const $ = (id) => document.getElementById(id);
 const START = new Date("2024-10-26T00:00:00-03:00");
 const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
+const previewMensual = /(?:^|[?&])mensual(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
+let mensualOn = false;
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -59,6 +61,11 @@ function fechaHumana(d) {
 
 function esDiaFiesta(d) {
   return previewFiesta || fechaAR(d).slice(5) === "10-26";
+}
+
+function esDiaMensual(d) {
+  if (esDiaFiesta(d)) return false;
+  return previewMensual || fechaAR(d).slice(8) === "26";
 }
 
 function aniosCumplidos(d) {
@@ -98,11 +105,15 @@ function nextAnniversary(from, now) {
   return next;
 }
 
-function setFiesta(on, d) {
-  fiestaOn = on;
-  document.body.classList.toggle("fiesta", on);
+function setModos(anni, mes, d) {
+  fiestaOn = anni;
+  mensualOn = mes && !anni;
+  document.body.classList.toggle("fiesta", fiestaOn);
+  document.body.classList.toggle("mensual", mensualOn);
   const msg = $("fiestaMsg");
-  if (msg) msg.textContent = on ? textoFiesta(d || new Date()) : "";
+  if (msg) msg.textContent = fiestaOn ? textoFiesta(d || new Date()) : "";
+  const mmsg = $("mensualMsg");
+  if (mmsg) mmsg.textContent = mensualOn ? "Otro 26. Un mes más juntitos." : "";
 }
 
 function renderCounter() {
@@ -116,21 +127,22 @@ function renderCounter() {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const left = Math.round((next - today) / 86400000);
   const isDay = esDiaFiesta(now);
+  const isMensual = esDiaMensual(now);
   const humano = fechaHumana(isDay ? now : next);
-  $("chip").textContent = isDay
-    ? `Hoy es el aniversario · ${humano}`
-    : `${left} día${left === 1 ? "" : "s"} para nuestro aniversario`;
+  if (isDay) $("chip").textContent = `Hoy es el aniversario · ${humano}`;
+  else if (isMensual) $("chip").textContent = "Hoy es nuestro 26";
+  else $("chip").textContent = `${left} día${left === 1 ? "" : "s"} para nuestro aniversario`;
   const totalDays = Math.floor((now - START) / 86400000);
   $("sub").innerHTML = `<span><strong>${totalDays}</strong> días juntitos</span>`;
   $("counter").innerHTML = units.map(([label, n]) =>
     `<div class="unit"><b>${n}</b><span>${label}</span></div>`
   ).join("");
-  setFiesta(isDay, now);
+  setModos(isDay, isMensual, now);
 }
 
 function spawnHearts() {
   const root = $("hearts");
-  const n = fiestaOn ? 22 : 10;
+  const n = fiestaOn ? 22 : (mensualOn ? 16 : 10);
   for (let i = 0; i < n; i++) {
     const h = document.createElement("div");
     h.className = "heart";
