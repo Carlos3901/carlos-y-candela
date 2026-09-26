@@ -143,7 +143,7 @@ function renderCounter() {
   const isMensual = esDiaMensual(now);
   const humano = fechaHumana(isDay ? now : next);
   if (isDay) $("chip").textContent = `Hoy es el aniversario · ${humano}`;
-  else if (isMensual) $("chip").textContent = "Hoy es nuestro 26";
+  else if (isMensual) $("chip").textContent = "Hoy 26 es nuestro messaversario";
   else $("chip").textContent = `${left} día${left === 1 ? "" : "s"} para nuestro aniversario`;
   const totalDays = Math.floor((now - START) / 86400000);
   $("sub").innerHTML = `<span><strong>${totalDays}</strong> días juntitos</span>`;
@@ -294,8 +294,8 @@ function fadeMusic(play) {
       if (musicBtn) musicBtn.hidden = false;
       const step = () => {
         if (!musicOn) return;
-        endMusic.volume = Math.min(0.15, endMusic.volume + 0.008);
-        if (endMusic.volume < 0.15) requestAnimationFrame(step);
+        endMusic.volume = Math.min(0.08, endMusic.volume + 0.006);
+        if (endMusic.volume < 0.08) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
     }).catch(() => {});
