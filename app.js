@@ -43,6 +43,7 @@ let fiestaOn = false;
 let mensualOn = false;
 const INTRO_FIN = ", y no quería que solo fuese un día más, una simple foto o un texto, por eso hice esto, para poder entrar y ver todos los días un poco de nosotros yyyyyy te amoooo muchsiisisisiimo";
 const INTRO_CASI = "Parece poco pero ya pasaron casi dos años" + INTRO_FIN;
+const ORDINALES = ["","primer","segundo","tercer","cuarto","quinto","sexto","séptimo","octavo","noveno","décimo"];
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -73,7 +74,7 @@ function esDiaMensual(d) {
 function aniosCumplidos(d) {
   const ar = fechaAR(d);
   let n = Number(ar.slice(0, 4)) - 2024;
-  if (ar.slice(5) < "10-26") n -= 1;
+  if (!previewFiesta && ar.slice(5) < "10-26") n -= 1;
   return Math.max(1, n);
 }
 
@@ -89,6 +90,12 @@ function textoIntro(d) {
 function textoFiesta(d) {
   const n = aniosCumplidos(d);
   return "Hoy ya son " + n + " año" + (n === 1 ? "" : "s") + " con la persona más linda del mundo, te mereces todo y un poco más";
+}
+
+function chipAniversario(d) {
+  const n = aniosCumplidos(d);
+  const ord = ORDINALES[n] || (n + "°");
+  return "Hoy es nuestro " + ord + " aniversario";
 }
 
 function diffParts(from, to) {
@@ -141,8 +148,7 @@ function renderCounter() {
   const left = Math.round((next - today) / 86400000);
   const isDay = esDiaFiesta(now);
   const isMensual = esDiaMensual(now);
-  const humano = fechaHumana(isDay ? now : next);
-  if (isDay) $("chip").textContent = `Hoy es el aniversario · ${humano}`;
+  if (isDay) $("chip").textContent = chipAniversario(now);
   else if (isMensual) $("chip").textContent = "Hoy 26 es nuestro messaversario";
   else $("chip").textContent = `${left} día${left === 1 ? "" : "s"} para nuestro aniversario`;
   const totalDays = Math.floor((now - START) / 86400000);
