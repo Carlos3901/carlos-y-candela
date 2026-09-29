@@ -41,10 +41,7 @@ const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
 const previewMensual = /(?:^|[?&])mensual(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
 let mensualOn = false;
-const INTRO_FIN = ", y no quería que solo fuese un día más, una simple foto o un texto, por eso hice esto, para poder entrar y ver todos los días un poco de nosotros yyyyyy te amoooo muchsiisisisiimo";
-const INTRO_CASI = "Parece poco pero ya pasaron casi dos años" + INTRO_FIN;
-const INTRO_ANNI = "Ahora si son dos años, no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
-const ORDINALES = ["","primer","segundo","tercer","cuarto","quinto","sexto","séptimo","octavo","noveno","décimo"];
+const INTRO = "Ahora si son dos años, no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -55,14 +52,6 @@ function fechaAR(d) {
   }).format(d);
 }
 
-function fechaHumana(d) {
-  return new Intl.DateTimeFormat("es-AR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long"
-  }).format(d);
-}
-
 function esDiaFiesta(d) {
   return previewFiesta || fechaAR(d).slice(5) === "10-26";
 }
@@ -70,34 +59,6 @@ function esDiaFiesta(d) {
 function esDiaMensual(d) {
   if (esDiaFiesta(d)) return false;
   return previewMensual || fechaAR(d).slice(8) === "26";
-}
-
-function aniosCumplidos(d) {
-  const ar = fechaAR(d);
-  let n = Number(ar.slice(0, 4)) - 2024;
-  if (!previewFiesta && ar.slice(5) < "10-26") n -= 1;
-  return Math.max(1, n);
-}
-
-function textoIntro(d) {
-  if (esDiaFiesta(d)) return INTRO_ANNI;
-  const ar = fechaAR(d);
-  if (ar < "2026-10-26") return INTRO_CASI;
-  let n = Number(ar.slice(0, 4)) - 2024;
-  if (ar.slice(5) < "10-26") n -= 1;
-  n = Math.max(2, n);
-  return "Parece poco pero ya pasaron " + n + " año" + (n === 1 ? "" : "s") + INTRO_FIN;
-}
-
-function textoFiesta(d) {
-  const n = aniosCumplidos(d);
-  return "Hoy ya son " + n + " año" + (n === 1 ? "" : "s") + " con la persona más linda del mundo, te mereces todo y un poco más";
-}
-
-function chipAniversario(d) {
-  const n = aniosCumplidos(d);
-  const ord = ORDINALES[n] || (n + "°");
-  return "Hoy es nuestro " + ord + " aniversario";
 }
 
 function diffParts(from, to) {
@@ -121,21 +82,21 @@ function nextAnniversary(from, now) {
   const next = new Date(from.getFullYear(), from.getMonth(), from.getDate());
   next.setFullYear(now.getFullYear());
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  if (next < today) next.setFullYear(now.getFullYear() + 1);
+  if (next <= today) next.setFullYear(now.getFullYear() + 1);
   return next;
 }
 
-function setModos(anni, mes, d) {
+function setModos(anni, mes) {
   fiestaOn = anni;
   mensualOn = mes && !anni;
   document.body.classList.toggle("fiesta", fiestaOn);
   document.body.classList.toggle("mensual", mensualOn);
   const msg = $("fiestaMsg");
-  if (msg) msg.textContent = fiestaOn ? textoFiesta(d || new Date()) : "";
+  if (msg) msg.textContent = "";
   const mmsg = $("mensualMsg");
   if (mmsg) mmsg.textContent = mensualOn ? "Otro messaversario juntitossss ♡" : "";
   const intro = document.querySelector(".message");
-  if (intro) intro.textContent = textoIntro(d || new Date());
+  if (intro) intro.textContent = INTRO;
 }
 
 function renderCounter() {
@@ -150,15 +111,14 @@ function renderCounter() {
   const left = Math.round((next - today) / 86400000);
   const isDay = esDiaFiesta(now);
   const isMensual = esDiaMensual(now);
-  if (isDay) $("chip").textContent = chipAniversario(now);
-  else if (isMensual) $("chip").textContent = "Hoy 26 es nuestro messaversario";
+  if (isMensual) $("chip").textContent = "Hoy 26 es nuestro messaversario";
   else $("chip").textContent = `${left} día${left === 1 ? "" : "s"} para nuestro aniversario`;
   const totalDays = Math.floor((now - START) / 86400000);
   $("sub").innerHTML = `<span><strong>${totalDays}</strong> días juntitos</span>`;
   $("counter").innerHTML = units.map(([label, n]) =>
     `<div class="unit"><b>${n}</b><span>${label}</span></div>`
   ).join("");
-  setModos(isDay, isMensual, now);
+  setModos(isDay, isMensual);
 }
 
 function spawnHearts() {
