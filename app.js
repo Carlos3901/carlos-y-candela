@@ -61,6 +61,18 @@ function esDiaMensual(d) {
   return previewMensual || fechaAR(d).slice(8) === "26";
 }
 
+function aniosCumplidos(d) {
+  const ar = fechaAR(d);
+  let n = Number(ar.slice(0, 4)) - 2024;
+  if (!previewFiesta && ar.slice(5) < "10-26") n -= 1;
+  return Math.max(1, n);
+}
+
+function textoFiesta(d) {
+  const n = aniosCumplidos(d);
+  return "Hoy ya son " + n + " año" + (n === 1 ? "" : "s") + " con la persona más linda del mundo, te mereces todo y un poco más";
+}
+
 function diffParts(from, to) {
   let seconds = Math.max(0, Math.floor((to - from) / 1000));
   const s = seconds % 60; seconds = Math.floor(seconds / 60);
@@ -86,13 +98,13 @@ function nextAnniversary(from, now) {
   return next;
 }
 
-function setModos(anni, mes) {
+function setModos(anni, mes, d) {
   fiestaOn = anni;
   mensualOn = mes && !anni;
   document.body.classList.toggle("fiesta", fiestaOn);
   document.body.classList.toggle("mensual", mensualOn);
   const msg = $("fiestaMsg");
-  if (msg) msg.textContent = "";
+  if (msg) msg.textContent = fiestaOn ? textoFiesta(d || new Date()) : "";
   const mmsg = $("mensualMsg");
   if (mmsg) mmsg.textContent = mensualOn ? "Otro messaversario juntitossss ♡" : "";
   const intro = document.querySelector(".message");
@@ -118,7 +130,7 @@ function renderCounter() {
   $("counter").innerHTML = units.map(([label, n]) =>
     `<div class="unit"><b>${n}</b><span>${label}</span></div>`
   ).join("");
-  setModos(isDay, isMensual);
+  setModos(isDay, isMensual, now);
 }
 
 function spawnHearts() {
