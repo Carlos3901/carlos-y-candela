@@ -43,6 +43,7 @@ let fiestaOn = false;
 let mensualOn = false;
 const INTRO_FIN = ", y no quería que solo fuese un día más, una simple foto o un texto, por eso hice esto, para poder entrar y ver todos los días un poco de nosotros yyyyyy te amoooo muchsiisisisiimo";
 const INTRO_CASI = "Parece poco pero ya pasaron casi dos años" + INTRO_FIN;
+const INTRO_ANNI = "Ahora si son dos años, no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
 const ORDINALES = ["","primer","segundo","tercer","cuarto","quinto","sexto","séptimo","octavo","noveno","décimo"];
 
 function fechaAR(d) {
@@ -79,10 +80,11 @@ function aniosCumplidos(d) {
 }
 
 function textoIntro(d) {
+  if (esDiaFiesta(d)) return INTRO_ANNI;
   const ar = fechaAR(d);
-  if (!previewFiesta && ar < "2026-10-26") return INTRO_CASI;
+  if (ar < "2026-10-26") return INTRO_CASI;
   let n = Number(ar.slice(0, 4)) - 2024;
-  if (!previewFiesta && ar.slice(5) < "10-26") n -= 1;
+  if (ar.slice(5) < "10-26") n -= 1;
   n = Math.max(2, n);
   return "Parece poco pero ya pasaron " + n + " año" + (n === 1 ? "" : "s") + INTRO_FIN;
 }
@@ -161,15 +163,15 @@ function renderCounter() {
 
 function spawnHearts() {
   const root = $("hearts");
-  const n = fiestaOn ? 22 : (mensualOn ? 16 : 10);
+  const n = fiestaOn ? 48 : (mensualOn ? 16 : 10);
   for (let i = 0; i < n; i++) {
     const h = document.createElement("div");
     h.className = "heart";
     h.textContent = i % 3 === 0 ? "♥" : "♡";
     h.style.left = Math.random() * 100 + "%";
-    h.style.fontSize = (fiestaOn ? 14 : 12) + Math.random() * (fiestaOn ? 22 : 16) + "px";
-    h.style.animationDuration = 6 + Math.random() * 6 + "s";
-    h.style.animationDelay = Math.random() * 3 + "s";
+    h.style.fontSize = (fiestaOn ? 16 : 12) + Math.random() * (fiestaOn ? 28 : 16) + "px";
+    h.style.animationDuration = 5 + Math.random() * 7 + "s";
+    h.style.animationDelay = Math.random() * 2.5 + "s";
     root.appendChild(h);
     setTimeout(() => h.remove(), 14000);
   }
@@ -340,4 +342,4 @@ if (musicBtn) {
 renderCounter();
 spawnHearts();
 setInterval(renderCounter, 1000);
-setInterval(spawnHearts, 9000);
+setInterval(spawnHearts, 7000);
