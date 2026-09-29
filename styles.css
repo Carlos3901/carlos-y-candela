@@ -62,6 +62,7 @@ body.fiesta h1 { text-shadow: 0 0 28px rgba(212, 176, 122, 0.45); }
   border-top: 1px solid rgba(212, 176, 122, 0.28);
   border-bottom: 1px solid rgba(212, 176, 122, 0.28);
 }
+body.fiesta .fiesta-msg { display: block; }
 body.fiesta .chip {
   border-color: var(--gold);
   background: rgba(212, 176, 122, 0.28);
