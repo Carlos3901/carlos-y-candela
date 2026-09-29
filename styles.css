@@ -67,6 +67,10 @@ body.fiesta .chip {
   border-color: var(--gold);
   background: rgba(212, 176, 122, 0.28);
 }
+body.fiesta .message {
+  color: #e85a6b;
+  text-shadow: 0 0 18px rgba(196, 92, 106, 0.4);
+}
 .mensual-msg {
   display: none;
   font-family: "Cormorant Garamond", serif;
