@@ -10,7 +10,8 @@ document.querySelectorAll(".featured").forEach((el,i)=>{
 const track0 = document.getElementById("railTrack");
 const tilts = [-2,1.8,-1.2,1.4,-1.8,1.1,-0.8,2,-1.5,1.3];
 for (let i=1;i<=58;i++){
-  const src = BASE+"t"+String(i).padStart(2,"0")+".jpg";
+  const ext = i >= 55 ? ".jpeg" : ".jpg";
+  const src = BASE+"t"+String(i).padStart(2,"0")+ext;
   const fig = document.createElement("figure");
   fig.className = "polaroid";
   fig.dataset.full = src;
