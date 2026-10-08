@@ -42,7 +42,7 @@ const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
 const previewMensual = /(?:^|[?&])mensual(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
 let mensualOn = false;
-const INTRO = "Ahora si son dos años, no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
+const INTRO_REST = ", no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -67,6 +67,15 @@ function aniosCumplidos(d) {
   let n = Number(ar.slice(0, 4)) - 2024;
   if (!previewFiesta && ar.slice(5) < "10-26") n -= 1;
   return Math.max(1, n);
+}
+
+function textoIntro(d) {
+  const ar = fechaAR(d || new Date());
+  // Desde el 26/10/2026 (o preview fiesta): "deveritas"; antes: "casi"
+  if (previewFiesta || ar >= "2026-10-26") {
+    return "Ahora si deveritas son dos años" + INTRO_REST;
+  }
+  return "Casi son dos años" + INTRO_REST;
 }
 
 function textoFiesta(d) {
@@ -109,7 +118,7 @@ function setModos(anni, mes, d) {
   const mmsg = $("mensualMsg");
   if (mmsg) mmsg.textContent = mensualOn ? "Otro messaversario juntitossss ♡" : "";
   const intro = document.querySelector(".message");
-  if (intro) intro.textContent = INTRO;
+  if (intro) intro.textContent = textoIntro(d || new Date());
 }
 
 function renderCounter() {
