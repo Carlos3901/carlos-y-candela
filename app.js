@@ -42,7 +42,8 @@ const previewFiesta = /(?:^|[?&])fiesta(?:=1|&|$)/.test(location.search);
 const previewMensual = /(?:^|[?&])mensual(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
 let mensualOn = false;
-const INTRO_REST = ", no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
+const INTRO_CASI = "Casi son dos años, no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
+const INTRO_FIESTA = "Ahora si deveritas son dos años juntos, dos años amando a la personita mas hermosa del mundo, no me arrepiento de mandar aquel mensaje en un ig, y gracias a vos, gracias por remarla ahre, quiero una vida con vos… Te amo meu beleza, meu todo…";
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -71,11 +72,8 @@ function aniosCumplidos(d) {
 
 function textoIntro(d) {
   const ar = fechaAR(d || new Date());
-  // Desde el 26/10/2026 (o preview fiesta): "deveritas"; antes: "casi"
-  if (previewFiesta || ar >= "2026-10-26") {
-    return "Ahora si deveritas son dos años" + INTRO_REST;
-  }
-  return "Casi son dos años" + INTRO_REST;
+  if (previewFiesta || ar >= "2026-10-26") return INTRO_FIESTA;
+  return INTRO_CASI;
 }
 
 function textoFiesta(d) {
