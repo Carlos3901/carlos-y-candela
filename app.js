@@ -117,17 +117,13 @@ let audioLevel = 0.28;
 let fiestaWanted = false;
 let endWanted = false;
 
-function activeTrack() {
-  if (fiestaOn && fiestaMusic) return fiestaMusic;
-  if (endMusicEarly) return endMusicEarly;
-  return null;
-}
-
 function applyAudioVolume() {
   const vol = audioMuted ? 0 : audioLevel;
   [fiestaMusic, endMusicEarly].forEach((a) => {
     if (!a) return;
-    try { a.volume = a === endMusicEarly ? Math.min(vol, 0.15) : vol; } catch (e) {}
+    try {
+      a.volume = a === endMusicEarly ? Math.min(vol, 0.15) : vol;
+    } catch (e) {}
     a.muted = !!audioMuted;
   });
   if (fiestaMute) {
@@ -186,13 +182,16 @@ if (fiestaMute) {
       if (fiestaVol) fiestaVol.value = "28";
     }
     applyAudioVolume();
-    const track = activeTrack();
-    if (!track) return;
     if (audioMuted) {
-      track.pause();
-    } else if ((fiestaOn && fiestaWanted) || endWanted) {
-      const p = track.play();
-      if (p && p.catch) p.catch(() => {});
+      if (fiestaMusic) fiestaMusic.pause();
+      if (endMusicEarly) endMusicEarly.pause();
+      return;
+    }
+    // unmute: reanudar sin reiniciar
+    if (fiestaOn && fiestaWanted && fiestaMusic) {
+      fiestaMusic.play().catch(() => {});
+    } else if (endWanted && endMusicEarly) {
+      endMusicEarly.play().catch(() => {});
     }
   });
 }
@@ -385,29 +384,39 @@ const cierreFotos = $("cierreFotos");
 let musicOn = false;
 function fadeMusic(play) {
   if (!endMusic || fiestaOn) return;
-  if (play) {
-    endWanted = true;
-    applyAudioVolume();
-    if (audioMuted) return;
-    const target = Math.min(0.12, Math.max(0.04, audioLevel * 0.4));
-    endMusic.volume = 0;
-    endMusic.play().then(() => {
-      musicOn = true;
-      const step = () => {
-        if (!musicOn || fiestaOn || audioMuted) return;
-        applyAudioVolume();
-        if (endMusic.volume < target) {
-          endMusic.volume = Math.min(target, endMusic.volume + 0.006);
-          requestAnimationFrame(step);
-        }
-      };
-      requestAnimationFrame(step);
-    }).catch(() => {});
-  } else {
+  if (!play) {
     musicOn = false;
     endWanted = false;
     endMusic.pause();
+    return;
   }
+  endWanted = true;
+  musicOn = true;
+  if (audioMuted) return;
+  // Si ya estaba sonando o se reanuda a mitad, no reiniciar
+  const resuming = endMusic.currentTime > 0.25;
+  if (!endMusic.paused) {
+    applyAudioVolume();
+    return;
+  }
+  if (resuming) {
+    applyAudioVolume();
+    endMusic.play().catch(() => {});
+    return;
+  }
+  const target = Math.min(0.12, Math.max(0.04, audioLevel * 0.4));
+  try { endMusic.volume = 0; } catch (e) {}
+  endMusic.play().then(() => {
+    const step = () => {
+      if (!musicOn || fiestaOn || audioMuted || endMusic.paused) return;
+      try {
+        endMusic.volume = Math.min(target, endMusic.volume + 0.006);
+      } catch (e) {}
+      if (endMusic.volume < target) requestAnimationFrame(step);
+      else applyAudioVolume();
+    };
+    requestAnimationFrame(step);
+  }).catch(() => {});
 }
 function unlockMusic() {
   if (!endMusic || fiestaOn) return;
