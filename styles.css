@@ -254,17 +254,17 @@ body.fiesta .fiesta-audio { display: flex; }
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(12, 5, 8, 0.78);
-  border: 1px solid rgba(212, 176, 122, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   color: var(--gold);
   font-size: 18px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
 }
 .fiesta-toggle.is-muted {
   color: var(--muted);
@@ -277,11 +277,11 @@ body.fiesta .fiesta-audio { display: flex; }
   gap: 12px;
   padding: 14px 10px 12px;
   border-radius: 22px;
-  background: rgba(12, 5, 8, 0.82);
-  border: 1px solid rgba(212, 176, 122, 0.32);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
 }
 .fiesta-audio.open .fiesta-panel { display: flex; }
 .fiesta-mute {
