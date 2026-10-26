@@ -104,7 +104,7 @@ body.mensual .chip {
   font-family: "Cormorant Garamond", serif;
   font-style: italic; text-align: center; line-height: 1.45; color: #f3e6db;
 }
-.message { font-size: 20px; margin: 22px 8px 6px; }
+.message { font-size: 20px; margin: 22px 8px 6px; white-space: pre-line; }
 .photo-note { font-size: 19px; margin: 18px 10px 8px; }
 .cierre {
   font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 20px;
