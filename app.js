@@ -107,6 +107,8 @@ function nextAnniversary(from, now) {
 }
 
 const fiestaMusic = $("fiestaMusic");
+const fiestaAudio = $("fiestaAudio");
+const fiestaToggle = $("fiestaToggle");
 const fiestaMute = $("fiestaMute");
 const fiestaVol = $("fiestaVol");
 let fiestaMuted = false;
@@ -115,21 +117,29 @@ let fiestaWanted = false;
 
 function applyFiestaVolume() {
   if (!fiestaMusic) return;
-  fiestaMusic.volume = fiestaMuted ? 0 : fiestaLevel;
+  const vol = fiestaMuted ? 0 : fiestaLevel;
+  try { fiestaMusic.volume = vol; } catch (e) {}
+  fiestaMusic.muted = fiestaMuted || vol === 0;
   if (fiestaMute) {
-    fiestaMute.textContent = fiestaMuted ? "×" : "♫";
+    fiestaMute.textContent = fiestaMuted ? "play" : "mute";
     fiestaMute.classList.toggle("is-muted", fiestaMuted);
+  }
+  if (fiestaToggle) {
+    fiestaToggle.textContent = fiestaMuted ? "×" : "♪";
+    fiestaToggle.classList.toggle("is-muted", fiestaMuted);
   }
 }
 
 function playFiestaMusic() {
   if (!fiestaMusic || !fiestaWanted) return;
   applyFiestaVolume();
-  fiestaMusic.play().catch(() => {});
+  const p = fiestaMusic.play();
+  if (p && p.catch) p.catch(() => {});
 }
 
 function stopFiestaMusic() {
   fiestaWanted = false;
+  if (fiestaAudio) fiestaAudio.classList.remove("open");
   if (!fiestaMusic) return;
   fiestaMusic.pause();
   try { fiestaMusic.currentTime = 0; } catch (e) {}
@@ -145,23 +155,47 @@ function syncFiestaAudio(on) {
 }
 
 if (fiestaVol) {
-  fiestaVol.addEventListener("input", () => {
+  const onVol = () => {
     fiestaLevel = Math.max(0, Math.min(1, Number(fiestaVol.value) / 100));
     if (fiestaLevel > 0) fiestaMuted = false;
     applyFiestaVolume();
-  });
+    if (!fiestaMuted) playFiestaMusic();
+  };
+  fiestaVol.addEventListener("input", onVol);
+  fiestaVol.addEventListener("change", onVol);
 }
 if (fiestaMute) {
-  fiestaMute.addEventListener("click", () => {
+  fiestaMute.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     fiestaMuted = !fiestaMuted;
     if (!fiestaMuted && fiestaLevel === 0) {
       fiestaLevel = 0.28;
       if (fiestaVol) fiestaVol.value = "28";
     }
     applyFiestaVolume();
-    if (!fiestaMuted) playFiestaMusic();
+    if (fiestaMuted) {
+      if (fiestaMusic) fiestaMusic.pause();
+    } else {
+      playFiestaMusic();
+    }
   });
 }
+if (fiestaToggle) {
+  fiestaToggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!fiestaAudio) return;
+    fiestaAudio.classList.toggle("open");
+    playFiestaMusic();
+  });
+}
+if (fiestaAudio) {
+  fiestaAudio.addEventListener("click", (e) => e.stopPropagation());
+}
+document.addEventListener("click", () => {
+  if (fiestaAudio) fiestaAudio.classList.remove("open");
+});
 document.addEventListener("touchstart", () => { if (fiestaWanted) playFiestaMusic(); }, { once: true });
 document.addEventListener("click", () => { if (fiestaWanted) playFiestaMusic(); }, { once: true });
 
