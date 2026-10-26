@@ -162,37 +162,51 @@ function syncFiestaAudio(on) {
   }
 }
 
+function setMuted(next) {
+  audioMuted = !!next;
+  if (!audioMuted && audioLevel === 0) {
+    audioLevel = 0.28;
+    if (fiestaVol) fiestaVol.value = "28";
+  }
+  applyAudioVolume();
+  if (audioMuted) {
+    if (fiestaMusic) { try { fiestaMusic.pause(); } catch (e) {} }
+    if (endMusicEarly) { try { endMusicEarly.pause(); } catch (e) {} }
+    return;
+  }
+  if (fiestaOn && fiestaWanted && fiestaMusic) {
+    fiestaMusic.play().catch(() => {});
+  } else if (endWanted && endMusicEarly) {
+    endMusicEarly.play().catch(() => {});
+  }
+}
+
+function toggleMute(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  setMuted(!audioMuted);
+}
+
 if (fiestaVol) {
   const onVol = () => {
     audioLevel = Math.max(0, Math.min(1, Number(fiestaVol.value) / 100));
     if (audioLevel > 0) audioMuted = false;
     applyAudioVolume();
-    if (!audioMuted && fiestaWanted) playFiestaMusic();
+    if (!audioMuted && endWanted && endMusicEarly && endMusicEarly.paused) {
+      endMusicEarly.play().catch(() => {});
+    }
+    if (!audioMuted && fiestaWanted && fiestaMusic && fiestaMusic.paused) {
+      fiestaMusic.play().catch(() => {});
+    }
   };
   fiestaVol.addEventListener("input", onVol);
   fiestaVol.addEventListener("change", onVol);
 }
 if (fiestaMute) {
-  fiestaMute.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    audioMuted = !audioMuted;
-    if (!audioMuted && audioLevel === 0) {
-      audioLevel = 0.28;
-      if (fiestaVol) fiestaVol.value = "28";
-    }
-    applyAudioVolume();
-    if (audioMuted) {
-      if (fiestaMusic) fiestaMusic.pause();
-      if (endMusicEarly) endMusicEarly.pause();
-      return;
-    }
-    // unmute: reanudar sin reiniciar
-    if (fiestaOn && fiestaWanted && fiestaMusic) {
-      fiestaMusic.play().catch(() => {});
-    } else if (endWanted && endMusicEarly) {
-      endMusicEarly.play().catch(() => {});
-    }
+  ["pointerup", "click"].forEach((ev) => {
+    fiestaMute.addEventListener(ev, toggleMute);
   });
 }
 if (fiestaToggle) {
@@ -200,15 +214,38 @@ if (fiestaToggle) {
     e.preventDefault();
     e.stopPropagation();
     if (!fiestaAudio) return;
-    fiestaAudio.classList.toggle("open");
-    if (fiestaWanted) playFiestaMusic();
+    const musicActive = (fiestaWanted && fiestaOn) || endWanted;
+    if (fiestaAudio.classList.contains("open")) {
+      fiestaAudio.classList.remove("open");
+      return;
+    }
+    if (musicActive) {
+      toggleMute(e);
+      return;
+    }
+    fiestaAudio.classList.add("open");
   });
+  let holdTimer = null;
+  fiestaToggle.addEventListener("pointerdown", (e) => {
+    e.stopPropagation();
+    holdTimer = setTimeout(() => {
+      holdTimer = null;
+      if (fiestaAudio) fiestaAudio.classList.add("open");
+    }, 400);
+  });
+  const clearHold = () => { if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; } };
+  fiestaToggle.addEventListener("pointerup", clearHold);
+  fiestaToggle.addEventListener("pointerleave", clearHold);
+  fiestaToggle.addEventListener("pointercancel", clearHold);
 }
 if (fiestaAudio) {
   fiestaAudio.addEventListener("click", (e) => e.stopPropagation());
+  fiestaAudio.addEventListener("pointerup", (e) => e.stopPropagation());
 }
-document.addEventListener("click", () => {
-  if (fiestaAudio) fiestaAudio.classList.remove("open");
+document.addEventListener("click", (e) => {
+  if (fiestaAudio && !fiestaAudio.contains(e.target)) {
+    fiestaAudio.classList.remove("open");
+  }
 });
 document.addEventListener("touchstart", () => { if (fiestaWanted) playFiestaMusic(); }, { once: true });
 document.addEventListener("click", () => { if (fiestaWanted) playFiestaMusic(); }, { once: true });
@@ -393,7 +430,6 @@ function fadeMusic(play) {
   endWanted = true;
   musicOn = true;
   if (audioMuted) return;
-  // Si ya estaba sonando o se reanuda a mitad, no reiniciar
   const resuming = endMusic.currentTime > 0.25;
   if (!endMusic.paused) {
     applyAudioVolume();
