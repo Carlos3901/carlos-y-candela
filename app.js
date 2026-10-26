@@ -107,32 +107,42 @@ function nextAnniversary(from, now) {
 }
 
 const fiestaMusic = $("fiestaMusic");
+const endMusicEarly = $("endMusic");
 const fiestaAudio = $("fiestaAudio");
 const fiestaToggle = $("fiestaToggle");
 const fiestaMute = $("fiestaMute");
 const fiestaVol = $("fiestaVol");
-let fiestaMuted = false;
-let fiestaLevel = 0.28;
+let audioMuted = false;
+let audioLevel = 0.28;
 let fiestaWanted = false;
+let endWanted = false;
 
-function applyFiestaVolume() {
-  if (!fiestaMusic) return;
-  const vol = fiestaMuted ? 0 : fiestaLevel;
-  try { fiestaMusic.volume = vol; } catch (e) {}
-  fiestaMusic.muted = !!fiestaMuted;
+function activeTrack() {
+  if (fiestaOn && fiestaMusic) return fiestaMusic;
+  if (endMusicEarly) return endMusicEarly;
+  return null;
+}
+
+function applyAudioVolume() {
+  const vol = audioMuted ? 0 : audioLevel;
+  [fiestaMusic, endMusicEarly].forEach((a) => {
+    if (!a) return;
+    try { a.volume = a === endMusicEarly ? Math.min(vol, 0.15) : vol; } catch (e) {}
+    a.muted = !!audioMuted;
+  });
   if (fiestaMute) {
-    fiestaMute.textContent = fiestaMuted ? "play" : "mute";
-    fiestaMute.classList.toggle("is-muted", fiestaMuted);
+    fiestaMute.textContent = audioMuted ? "play" : "mute";
+    fiestaMute.classList.toggle("is-muted", audioMuted);
   }
   if (fiestaToggle) {
-    fiestaToggle.textContent = fiestaMuted ? "×" : "♪";
-    fiestaToggle.classList.toggle("is-muted", fiestaMuted);
+    fiestaToggle.textContent = audioMuted ? "×" : "♪";
+    fiestaToggle.classList.toggle("is-muted", audioMuted);
   }
 }
 
 function playFiestaMusic() {
-  if (!fiestaMusic || !fiestaWanted || fiestaMuted) return;
-  applyFiestaVolume();
+  if (!fiestaMusic || !fiestaWanted || audioMuted) return;
+  applyAudioVolume();
   if (!fiestaMusic.paused) return;
   const p = fiestaMusic.play();
   if (p && p.catch) p.catch(() => {});
@@ -140,7 +150,6 @@ function playFiestaMusic() {
 
 function stopFiestaMusic() {
   fiestaWanted = false;
-  if (fiestaAudio) fiestaAudio.classList.remove("open");
   if (!fiestaMusic) return;
   fiestaMusic.pause();
   try { fiestaMusic.currentTime = 0; } catch (e) {}
@@ -148,6 +157,8 @@ function stopFiestaMusic() {
 
 function syncFiestaAudio(on) {
   if (on) {
+    endWanted = false;
+    if (endMusicEarly) endMusicEarly.pause();
     fiestaWanted = true;
     playFiestaMusic();
   } else {
@@ -157,10 +168,10 @@ function syncFiestaAudio(on) {
 
 if (fiestaVol) {
   const onVol = () => {
-    fiestaLevel = Math.max(0, Math.min(1, Number(fiestaVol.value) / 100));
-    if (fiestaLevel > 0) fiestaMuted = false;
-    applyFiestaVolume();
-    if (!fiestaMuted) playFiestaMusic();
+    audioLevel = Math.max(0, Math.min(1, Number(fiestaVol.value) / 100));
+    if (audioLevel > 0) audioMuted = false;
+    applyAudioVolume();
+    if (!audioMuted && fiestaWanted) playFiestaMusic();
   };
   fiestaVol.addEventListener("input", onVol);
   fiestaVol.addEventListener("change", onVol);
@@ -169,17 +180,18 @@ if (fiestaMute) {
   fiestaMute.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    fiestaMuted = !fiestaMuted;
-    if (!fiestaMuted && fiestaLevel === 0) {
-      fiestaLevel = 0.28;
+    audioMuted = !audioMuted;
+    if (!audioMuted && audioLevel === 0) {
+      audioLevel = 0.28;
       if (fiestaVol) fiestaVol.value = "28";
     }
-    applyFiestaVolume();
-    if (!fiestaMusic) return;
-    if (fiestaMuted) {
-      fiestaMusic.pause();
-    } else if (fiestaWanted) {
-      const p = fiestaMusic.play();
+    applyAudioVolume();
+    const track = activeTrack();
+    if (!track) return;
+    if (audioMuted) {
+      track.pause();
+    } else if ((fiestaOn && fiestaWanted) || endWanted) {
+      const p = track.play();
       if (p && p.catch) p.catch(() => {});
     }
   });
@@ -190,7 +202,7 @@ if (fiestaToggle) {
     e.stopPropagation();
     if (!fiestaAudio) return;
     fiestaAudio.classList.toggle("open");
-    playFiestaMusic();
+    if (fiestaWanted) playFiestaMusic();
   });
 }
 if (fiestaAudio) {
@@ -371,23 +383,29 @@ const endMusic = $("endMusic");
 const musicBtn = $("musicBtn");
 const cierreFotos = $("cierreFotos");
 let musicOn = false;
-let musicWanted = false;
 function fadeMusic(play) {
   if (!endMusic || fiestaOn) return;
   if (play) {
+    endWanted = true;
+    applyAudioVolume();
+    if (audioMuted) return;
+    const target = Math.min(0.12, Math.max(0.04, audioLevel * 0.4));
     endMusic.volume = 0;
     endMusic.play().then(() => {
       musicOn = true;
-      if (musicBtn) musicBtn.hidden = false;
       const step = () => {
-        if (!musicOn || fiestaOn) return;
-        endMusic.volume = Math.min(0.08, endMusic.volume + 0.006);
-        if (endMusic.volume < 0.08) requestAnimationFrame(step);
+        if (!musicOn || fiestaOn || audioMuted) return;
+        applyAudioVolume();
+        if (endMusic.volume < target) {
+          endMusic.volume = Math.min(target, endMusic.volume + 0.006);
+          requestAnimationFrame(step);
+        }
       };
       requestAnimationFrame(step);
     }).catch(() => {});
   } else {
     musicOn = false;
+    endWanted = false;
     endMusic.pause();
   }
 }
@@ -395,7 +413,7 @@ function unlockMusic() {
   if (!endMusic || fiestaOn) return;
   endMusic.volume = 0;
   endMusic.play().then(() => {
-    if (!musicWanted) endMusic.pause();
+    if (!endWanted) endMusic.pause();
   }).catch(() => {});
 }
 document.addEventListener("touchstart", unlockMusic, { once: true });
@@ -404,19 +422,13 @@ if (cierreFotos) {
   new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting && !fiestaOn) {
-        musicWanted = true;
+        endWanted = true;
         fadeMusic(true);
       }
     });
   }, { threshold: 0.35 }).observe(cierreFotos);
 }
-if (musicBtn) {
-  musicBtn.onclick = () => {
-    musicWanted = false;
-    fadeMusic(false);
-    musicBtn.hidden = true;
-  };
-}
+if (musicBtn) musicBtn.hidden = true;
 
 renderCounter();
 spawnHearts();
