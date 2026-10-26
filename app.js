@@ -43,7 +43,7 @@ const previewMensual = /(?:^|[?&])mensual(?:=1|&|$)/.test(location.search);
 let fiestaOn = false;
 let mensualOn = false;
 const INTRO_CASI = "Casi son dos años, no tenia fe en nuestra relación, es la verdad, pero no me arrepiento de contestar esa historia de Luci, te amo muchsiisismo mi vida, te elegiría una y mil veces más…";
-const INTRO_FIESTA = "Ahora si deveritas son dos años juntos, dos años amando a la personita mas hermosa del mundo, no me arrepiento de mandar aquel mensaje en un ig, y gracias a vos, gracias por remarla ahre, quiero una vida con vos… Te amo meu beleza, meu todo…";
+const INTRO_FIESTA = "Ahora si deveritas son dos años juntos, dos años amando a la personita mas hermosa del mundo, no me arrepiento de mandar aquel mensaje en un ig, y gracias a vos, gracias por remarla ahre, quiero una vida con vos…\n\nTe amo meu beleza, meu todo…";
 
 function fechaAR(d) {
   return new Intl.DateTimeFormat("en-CA", {
