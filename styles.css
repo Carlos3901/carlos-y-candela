@@ -250,6 +250,8 @@ button { font-family: Outfit, sans-serif; border: 0; cursor: pointer; background
   gap: 8px;
 }
 .fiesta-toggle {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -284,16 +286,20 @@ button { font-family: Outfit, sans-serif; border: 0; cursor: pointer; background
 }
 .fiesta-audio.open .fiesta-panel { display: flex; }
 .fiesta-mute {
-  min-width: 44px;
-  height: 28px;
-  padding: 0 10px;
+  min-width: 56px;
+  height: 36px;
+  padding: 0 14px;
   border-radius: 999px;
-  background: rgba(212, 176, 122, 0.14);
-  border: 1px solid rgba(212, 176, 122, 0.35);
+  background: rgba(212, 176, 122, 0.2);
+  border: 1px solid rgba(212, 176, 122, 0.45);
   color: var(--gold);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 11;
 }
 .fiesta-mute.is-muted {
   color: var(--muted);
