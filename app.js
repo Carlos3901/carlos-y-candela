@@ -119,7 +119,7 @@ function applyFiestaVolume() {
   if (!fiestaMusic) return;
   const vol = fiestaMuted ? 0 : fiestaLevel;
   try { fiestaMusic.volume = vol; } catch (e) {}
-  fiestaMusic.muted = fiestaMuted || vol === 0;
+  fiestaMusic.muted = !!fiestaMuted;
   if (fiestaMute) {
     fiestaMute.textContent = fiestaMuted ? "play" : "mute";
     fiestaMute.classList.toggle("is-muted", fiestaMuted);
@@ -131,8 +131,9 @@ function applyFiestaVolume() {
 }
 
 function playFiestaMusic() {
-  if (!fiestaMusic || !fiestaWanted) return;
+  if (!fiestaMusic || !fiestaWanted || fiestaMuted) return;
   applyFiestaVolume();
+  if (!fiestaMusic.paused) return;
   const p = fiestaMusic.play();
   if (p && p.catch) p.catch(() => {});
 }
@@ -174,10 +175,12 @@ if (fiestaMute) {
       if (fiestaVol) fiestaVol.value = "28";
     }
     applyFiestaVolume();
+    if (!fiestaMusic) return;
     if (fiestaMuted) {
-      if (fiestaMusic) fiestaMusic.pause();
-    } else {
-      playFiestaMusic();
+      fiestaMusic.pause();
+    } else if (fiestaWanted) {
+      const p = fiestaMusic.play();
+      if (p && p.catch) p.catch(() => {});
     }
   });
 }
