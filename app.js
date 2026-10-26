@@ -108,10 +108,7 @@ function nextAnniversary(from, now) {
 
 const fiestaMusic = $("fiestaMusic");
 const endMusicEarly = $("endMusic");
-const fiestaAudio = $("fiestaAudio");
 const fiestaToggle = $("fiestaToggle");
-const fiestaMute = $("fiestaMute");
-const fiestaVol = $("fiestaVol");
 let audioMuted = false;
 let audioLevel = 0.28;
 let fiestaWanted = false;
@@ -126,13 +123,10 @@ function applyAudioVolume() {
     } catch (e) {}
     a.muted = !!audioMuted;
   });
-  if (fiestaMute) {
-    fiestaMute.textContent = audioMuted ? "play" : "mute";
-    fiestaMute.classList.toggle("is-muted", audioMuted);
-  }
   if (fiestaToggle) {
     fiestaToggle.textContent = audioMuted ? "×" : "♪";
     fiestaToggle.classList.toggle("is-muted", audioMuted);
+    fiestaToggle.setAttribute("aria-label", audioMuted ? "Reanudar" : "Silenciar");
   }
 }
 
@@ -140,8 +134,7 @@ function playFiestaMusic() {
   if (!fiestaMusic || !fiestaWanted || audioMuted) return;
   applyAudioVolume();
   if (!fiestaMusic.paused) return;
-  const p = fiestaMusic.play();
-  if (p && p.catch) p.catch(() => {});
+  fiestaMusic.play().catch(() => {});
 }
 
 function stopFiestaMusic() {
@@ -164,10 +157,6 @@ function syncFiestaAudio(on) {
 
 function setMuted(next) {
   audioMuted = !!next;
-  if (!audioMuted && audioLevel === 0) {
-    audioLevel = 0.28;
-    if (fiestaVol) fiestaVol.value = "28";
-  }
   applyAudioVolume();
   if (audioMuted) {
     if (fiestaMusic) { try { fiestaMusic.pause(); } catch (e) {} }
@@ -181,72 +170,13 @@ function setMuted(next) {
   }
 }
 
-function toggleMute(e) {
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-  setMuted(!audioMuted);
-}
-
-if (fiestaVol) {
-  const onVol = () => {
-    audioLevel = Math.max(0, Math.min(1, Number(fiestaVol.value) / 100));
-    if (audioLevel > 0) audioMuted = false;
-    applyAudioVolume();
-    if (!audioMuted && endWanted && endMusicEarly && endMusicEarly.paused) {
-      endMusicEarly.play().catch(() => {});
-    }
-    if (!audioMuted && fiestaWanted && fiestaMusic && fiestaMusic.paused) {
-      fiestaMusic.play().catch(() => {});
-    }
-  };
-  fiestaVol.addEventListener("input", onVol);
-  fiestaVol.addEventListener("change", onVol);
-}
-if (fiestaMute) {
-  ["pointerup", "click"].forEach((ev) => {
-    fiestaMute.addEventListener(ev, toggleMute);
-  });
-}
 if (fiestaToggle) {
   fiestaToggle.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!fiestaAudio) return;
-    const musicActive = (fiestaWanted && fiestaOn) || endWanted;
-    if (fiestaAudio.classList.contains("open")) {
-      fiestaAudio.classList.remove("open");
-      return;
-    }
-    if (musicActive) {
-      toggleMute(e);
-      return;
-    }
-    fiestaAudio.classList.add("open");
+    setMuted(!audioMuted);
   });
-  let holdTimer = null;
-  fiestaToggle.addEventListener("pointerdown", (e) => {
-    e.stopPropagation();
-    holdTimer = setTimeout(() => {
-      holdTimer = null;
-      if (fiestaAudio) fiestaAudio.classList.add("open");
-    }, 400);
-  });
-  const clearHold = () => { if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; } };
-  fiestaToggle.addEventListener("pointerup", clearHold);
-  fiestaToggle.addEventListener("pointerleave", clearHold);
-  fiestaToggle.addEventListener("pointercancel", clearHold);
 }
-if (fiestaAudio) {
-  fiestaAudio.addEventListener("click", (e) => e.stopPropagation());
-  fiestaAudio.addEventListener("pointerup", (e) => e.stopPropagation());
-}
-document.addEventListener("click", (e) => {
-  if (fiestaAudio && !fiestaAudio.contains(e.target)) {
-    fiestaAudio.classList.remove("open");
-  }
-});
 document.addEventListener("touchstart", () => { if (fiestaWanted) playFiestaMusic(); }, { once: true });
 document.addEventListener("click", () => { if (fiestaWanted) playFiestaMusic(); }, { once: true });
 
