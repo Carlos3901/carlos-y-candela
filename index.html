@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=mute3" />
+  <link rel="stylesheet" href="styles.css?v=mute-only" />
 </head>
 <body>
   <video id="bgVideo" class="bg-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
@@ -68,17 +68,13 @@
   <audio id="fiestaMusic" src="Fiesta.mp3" loop preload="auto" playsinline></audio>
   <button type="button" class="music-btn" id="musicBtn" hidden>silencio</button>
   <div class="fiesta-audio" id="fiestaAudio">
-    <div class="fiesta-panel" id="fiestaPanel">
-      <button type="button" class="fiesta-mute" id="fiestaMute" aria-label="Silenciar">mute</button>
-      <input type="range" class="fiesta-vol" id="fiestaVol" min="0" max="100" value="28" orient="vertical" aria-label="Volumen" />
-    </div>
-    <button type="button" class="fiesta-toggle" id="fiestaToggle" aria-label="Volumen">♪</button>
+    <button type="button" class="fiesta-toggle" id="fiestaToggle" aria-label="Silenciar">♪</button>
   </div>
   <div class="lightbox" id="lightbox">
     <button class="close" id="btnCloseLb">✕</button>
     <img id="lbImg" alt="Recuerdo" />
   </div>
-  <script src="app.js?v=mute3" defer></script>
+  <script src="app.js?v=mute-only" defer></script>
   <script data-goatcounter="https://charlycande.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
